@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -23,4 +24,12 @@ public class SPSO {
     
     @Column(name = "last_login")
     private Date lastLogin;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "spso_printer",
+            joinColumns = @JoinColumn(name = "spso_id"),
+            inverseJoinColumns = @JoinColumn(name = "printer_id")
+    )
+    private Set<Printer> printers;
 }
