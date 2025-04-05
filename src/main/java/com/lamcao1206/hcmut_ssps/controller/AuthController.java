@@ -2,6 +2,7 @@ package com.lamcao1206.hcmut_ssps.controller;
 
 import com.lamcao1206.hcmut_ssps.dto.request.CustomerRegisterDTO;
 import com.lamcao1206.hcmut_ssps.core.ResponseFactory;
+import com.lamcao1206.hcmut_ssps.dto.request.UserLoginDTO;
 import com.lamcao1206.hcmut_ssps.dto.response.CustomerResponseDTO;
 import com.lamcao1206.hcmut_ssps.service.CustomerService;
 import jakarta.validation.Valid;
@@ -22,5 +23,10 @@ public class AuthController {
     public ResponseEntity<?> registerCustomer(@RequestBody @Valid CustomerRegisterDTO dto) {
         CustomerResponseDTO customerResponseDTO = customerService.registerStudent(dto);
         return ResponseFactory.created("Customer register successfully", customerResponseDTO);
+    }
+    
+    @PostMapping("/login/customer")
+    public ResponseEntity<?> loginCustomer(@RequestBody @Valid UserLoginDTO dto) {
+        return ResponseFactory.success("Login successfully",customerService.authenticateUser(dto));
     }
 }

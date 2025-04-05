@@ -40,6 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     "ROLE_CUSTOMER"
             );
         }
+        
         throw new UsernameNotFoundException("User not found with email: " + username);
     }
 }

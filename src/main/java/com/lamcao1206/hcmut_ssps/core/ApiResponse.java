@@ -1,4 +1,4 @@
-package com.lamcao1206.hcmut_ssps.response;
+package com.lamcao1206.hcmut_ssps.core;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
