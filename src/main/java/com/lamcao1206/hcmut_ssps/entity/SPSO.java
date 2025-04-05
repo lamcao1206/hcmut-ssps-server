@@ -1,21 +1,19 @@
 package com.lamcao1206.hcmut_ssps.entity;
+
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "customer")
-@Getter
-@Setter
-public class Customer {
+@Data
+public class SPSO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     
     @Column(name = "name")
-    private String name;
+    private String username;
     
     @Column(name = "email")
     private String email;
@@ -23,9 +21,6 @@ public class Customer {
     @Column(name = "password")
     private String password;
     
-    @Column(name = "page_balance")
-    private int pageBalance;
-
     @Column(name = "last_login")
     private Date lastLogin;
 }
