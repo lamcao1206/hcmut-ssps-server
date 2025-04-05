@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SPSORepository extends JpaRepository<Long, SPSO> {
+public interface SPSORepository extends JpaRepository<SPSO, Long> {
     Optional<SPSO> findByEmail(String email);
 }
