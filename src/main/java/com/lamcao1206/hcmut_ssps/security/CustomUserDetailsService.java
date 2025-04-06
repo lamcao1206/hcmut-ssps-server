@@ -4,6 +4,7 @@ import com.lamcao1206.hcmut_ssps.entity.Customer;
 import com.lamcao1206.hcmut_ssps.entity.SPSO;
 import com.lamcao1206.hcmut_ssps.repository.CustomerRepository;
 import com.lamcao1206.hcmut_ssps.repository.SPSORepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,24 +22,30 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private CustomerRepository customerRepository;
     
+    @Autowired
+    private HttpServletRequest request;
+    
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<SPSO> spso = spsoRepository.findByEmail(username);
-        if (spso.isPresent()) {
-            return new CustomUserDetails(
-                    spso.get().getEmail(),
-                    spso.get().getPassword(),
-                    "ROLE_SPSO"
-            );
-        }
-        
-        Optional<Customer> customer = customerRepository.findByEmail(username);
-        if (customer.isPresent()) {
-            return new CustomUserDetails(
-                    customer.get().getEmail(),
-                    customer.get().getPassword(),
-                    "ROLE_CUSTOMER"
-            );
+        String requestUrl = request.getRequestURI();
+        if (requestUrl.contains("spso")) {
+            Optional<SPSO> spso = spsoRepository.findByEmail(username);
+            if (spso.isPresent()) {
+                return new CustomUserDetails(
+                        spso.get().getEmail(),
+                        spso.get().getPassword(),
+                        "ROLE_SPSO"
+                );
+            }
+        } else if (requestUrl.contains("customer")) {
+            Optional<Customer> customer = customerRepository.findByEmail(username);
+            if (customer.isPresent()) {
+                return new CustomUserDetails(
+                        customer.get().getEmail(),
+                        customer.get().getPassword(),
+                        "ROLE_CUSTOMER"
+                );
+            }
         }
         
         throw new UsernameNotFoundException("User not found with email: " + username);
