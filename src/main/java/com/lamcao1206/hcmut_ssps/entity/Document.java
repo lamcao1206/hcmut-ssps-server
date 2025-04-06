@@ -23,6 +23,9 @@ public class Document {
     @Column(name = "page")
     private String page;
     
+    @Column(name = "url")
+    private String url;
+    
     @OneToOne(mappedBy = "document")
     private PrintOrder order;
 }
