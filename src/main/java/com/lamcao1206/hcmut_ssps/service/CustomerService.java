@@ -7,6 +7,7 @@ import com.lamcao1206.hcmut_ssps.dto.response.JwtResponseDTO;
 import com.lamcao1206.hcmut_ssps.entity.Customer;
 import com.lamcao1206.hcmut_ssps.repository.CustomerRepository;
 import com.lamcao1206.hcmut_ssps.security.JwtTokenProvider;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +22,6 @@ import java.util.Optional;
 
 @Service
 public class CustomerService {
-    
     @Autowired
     private CustomerRepository customerRepository;
     
@@ -38,11 +38,11 @@ public class CustomerService {
     @Value("${ssps.customer.default_page}")
     private int DEFAULT_PAGE_BALANCE;
     
-    public CustomerResponseDTO registerStudent(CustomerRegisterDTO dto) throws RuntimeException{
+    public CustomerResponseDTO registerStudent(CustomerRegisterDTO dto) throws Exception {
         Optional<Customer> customer = customerRepository.findByEmail(dto.email());
         
         if (customer.isPresent()) {
-            throw new RuntimeException("Email" + dto.email() + " already registered!");
+            throw new BadRequestException("Email" + dto.email() + " already registered!");
         }
         
         Customer newCustomer = Customer.builder()
