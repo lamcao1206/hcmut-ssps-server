@@ -38,7 +38,7 @@ public class CustomerService {
     @Value("${ssps.customer.default_page}")
     private int DEFAULT_PAGE_BALANCE;
     
-    public CustomerResponseDTO registerStudent(CustomerRegisterDTO dto) throws Exception {
+    public CustomerResponseDTO registerStudent(CustomerRegisterDTO dto) throws BadRequestException {
         Optional<Customer> customer = customerRepository.findByEmail(dto.email());
         
         if (customer.isPresent()) {
