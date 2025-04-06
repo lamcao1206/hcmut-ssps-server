@@ -1,10 +1,18 @@
 package com.lamcao1206.hcmut_ssps.entity;
 
+import com.lamcao1206.hcmut_ssps.entity.enums.PrinterStatus;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "printer")
 public class Printer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +29,11 @@ public class Printer {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private PrinterStatus status;
     
     @ManyToMany(mappedBy = "printers")
     private Set<SPSO> spsos;
     
-    @OneToMany
-    @JoinColumn(name = "printer_id")
-    private Set<Document> documents;
+    @OneToMany(mappedBy = "printer")
+    private Set<PrintOrder> printOrders;
 }

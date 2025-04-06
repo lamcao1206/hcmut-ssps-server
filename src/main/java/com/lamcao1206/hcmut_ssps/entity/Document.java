@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "document")
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,6 @@ public class Document {
     @Column(name = "page")
     private String page;
     
-    @ManyToOne
-    @JoinColumn(name = "printer_id", nullable = false)
-    private Printer printer;
+    @OneToOne(mappedBy = "document")
+    private PrintOrder order;
 }
