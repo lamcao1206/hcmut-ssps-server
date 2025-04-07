@@ -20,6 +20,12 @@ public class PrintOrder {
     @Column(name = "status")
     private OrderStatus status;
     
+    @Column(name = "orientation")
+    private String orientation;
+    
+    @Column(name = "copies")
+    private int numCopies;
+    
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
