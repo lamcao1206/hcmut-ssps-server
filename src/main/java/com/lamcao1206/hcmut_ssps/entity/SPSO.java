@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SPSO {
+public class SPSO implements BaseSSPSUser{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

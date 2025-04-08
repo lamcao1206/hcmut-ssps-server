@@ -1,20 +1,23 @@
 package com.lamcao1206.hcmut_ssps.security;
 
+import com.lamcao1206.hcmut_ssps.entity.BaseSSPSUser;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
-// username in UserDetail is email in both Customer and SPSO entities
 public class CustomUserDetails implements UserDetails {
-    private final String username; 
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+    @Getter
+    private final BaseSSPSUser user;
 
-    public CustomUserDetails(String username, String password, String role) {
-        this.username = username;
+    public CustomUserDetails(BaseSSPSUser user, String password, String role) {
+        this.user = user;
         this.password = password;
         this.authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
     }
@@ -31,7 +34,11 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.user.getEmail();
+    }
+
+    public Long getId() {
+        return this.user.getId();
     }
 
     @Override

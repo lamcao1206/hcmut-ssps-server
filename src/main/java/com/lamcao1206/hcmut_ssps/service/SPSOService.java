@@ -1,13 +1,15 @@
 package com.lamcao1206.hcmut_ssps.service;
 
-import com.lamcao1206.hcmut_ssps.dto.request.CustomerRegisterDTO;
-import com.lamcao1206.hcmut_ssps.dto.request.UserLoginDTO;
-import com.lamcao1206.hcmut_ssps.dto.response.JwtResponseDTO;
-import com.lamcao1206.hcmut_ssps.dto.response.SPSOResponseDTO;
+import com.lamcao1206.hcmut_ssps.DTO.*;
+import com.lamcao1206.hcmut_ssps.entity.BaseSSPSUser;
+import com.lamcao1206.hcmut_ssps.entity.Customer;
 import com.lamcao1206.hcmut_ssps.entity.SPSO;
+import com.lamcao1206.hcmut_ssps.payload.AuthenticationResponse;
 import com.lamcao1206.hcmut_ssps.repository.SPSORepository;
+import com.lamcao1206.hcmut_ssps.security.CustomUserDetails;
 import com.lamcao1206.hcmut_ssps.security.JwtTokenProvider;
 import org.apache.coyote.BadRequestException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,37 +35,51 @@ public class SPSOService {
     @Autowired
     JwtTokenProvider jwtTokenProvider;
     
-    public SPSOResponseDTO registerSPSO(CustomerRegisterDTO dto) throws Exception {
-        Optional<SPSO> spso = spsoRepository.findByEmail(dto.email());
+    @Autowired
+    private ModelMapper modelMapper;
+    
+    public SpsoDTO registerSPSO(RegisterDTO dto) throws Exception {
+        Optional<SPSO> spso = spsoRepository.findByEmail(dto.getEmail());
         
         if (spso.isPresent()) {
-            throw new BadRequestException("Email " + dto.email() + " already registered!");
+            throw new BadRequestException("Email " + dto.getEmail() + " already registered!");
         }
         
         SPSO newSPSO = SPSO.builder()
-                .email(dto.email())
-                .name(dto.name())
-                .password(passwordEncoder.encode(dto.password()))
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .lastLogin(null)
                 .build();
         
         spsoRepository.save(newSPSO);
-        
-        return new SPSOResponseDTO(newSPSO.getId(), newSPSO.getEmail(), newSPSO.getName());
+
+        return modelMapper.map(newSPSO, SpsoDTO.class);
     }
-    
-    public JwtResponseDTO authenticateSPSO(UserLoginDTO loginDTO) throws Exception {
+
+    public AuthenticationResponse<?> authenticateUser(LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginDTO.email(),
-                        loginDTO.password()
+                        loginDTO.getEmail(),
+                        loginDTO.getPassword()
                 )
         );
-        
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        BaseSSPSUser user = userDetails.getUser();
         String token = jwtTokenProvider.generateToken(userDetails);
-        
-        return new JwtResponseDTO(token);
+
+        BaseSSPSUserDTO userDTO;
+        if (user instanceof Customer customer) {
+            userDTO = modelMapper.map(customer, CustomerDTO.class);
+        } else if (user instanceof SPSO spso) {
+            userDTO = modelMapper.map(spso, SpsoDTO.class);
+        } else {
+            throw new IllegalStateException("Unknown user type");
+        }
+
+        return new AuthenticationResponse<BaseSSPSUserDTO>(token, userDTO);
     }
 }

@@ -34,7 +34,7 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(CustomUserDetails userDetails) {
         String username = userDetails.getUsername();
         String roles = userDetails.getAuthorities().stream().
                 map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
@@ -43,8 +43,9 @@ public class JwtTokenProvider {
         Instant expiration = now.plus(Long.parseLong(jwtExpirationMs), ChronoUnit.MILLIS);
         
         return Jwts.builder()
-                .subject(username)
+                .subject(userDetails.getId().toString())
                 .claim("roles", roles)
+                .claim("email", userDetails.getUsername())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiration))
                 .signWith(key()).

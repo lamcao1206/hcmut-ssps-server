@@ -13,10 +13,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(name = "customer")
-public class Customer {
+public class Customer implements BaseSSPSUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     
     @Column(name = "name")
     private String name;

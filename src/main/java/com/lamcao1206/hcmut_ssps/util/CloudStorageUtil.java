@@ -1,4 +1,4 @@
-package com.lamcao1206.hcmut_ssps.utils;
+package com.lamcao1206.hcmut_ssps.util;
 
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.*;
@@ -6,8 +6,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 public final class CloudStorageUtil {
 
@@ -51,10 +51,11 @@ public final class CloudStorageUtil {
             BlobId blobId = BlobId.of(bucketName, fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                     .setContentType(file.getContentType())
+                    .setAcl(List.of(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
                     .build();
 
             Blob blob = STORAGE.createFrom(blobInfo, file.getInputStream());
-            return blob.signUrl(7, TimeUnit.DAYS).toString();
+            return String.format("https://storage.googleapis.com/%s/%s", bucketName, fileName);
         } catch (StorageException e) {
             throw new IOException("Failed to upload file to GCS: " + e.getMessage(), e);
         }

@@ -1,9 +1,9 @@
 package com.lamcao1206.hcmut_ssps.controller;
 
-import com.lamcao1206.hcmut_ssps.dto.request.CustomerRegisterDTO;
+import com.lamcao1206.hcmut_ssps.DTO.CustomerDTO;
+import com.lamcao1206.hcmut_ssps.DTO.LoginDTO;
+import com.lamcao1206.hcmut_ssps.DTO.RegisterDTO;
 import com.lamcao1206.hcmut_ssps.core.ResponseFactory;
-import com.lamcao1206.hcmut_ssps.dto.request.UserLoginDTO;
-import com.lamcao1206.hcmut_ssps.dto.response.CustomerResponseDTO;
 import com.lamcao1206.hcmut_ssps.service.CustomerService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
@@ -21,13 +21,13 @@ public class AuthController {
     private CustomerService customerService;
     
     @PostMapping("/register/customer")
-    public ResponseEntity<?> registerCustomer(@RequestBody @Valid CustomerRegisterDTO dto) throws BadRequestException {
-        CustomerResponseDTO customerResponseDTO = customerService.registerStudent(dto);
+    public ResponseEntity<?> registerCustomer(@RequestBody @Valid RegisterDTO dto) throws BadRequestException {
+        CustomerDTO customerResponseDTO = customerService.registerStudent(dto);
         return ResponseFactory.created("Customer register successfully", customerResponseDTO);
     }
     
     @PostMapping("/login/customer")
-    public ResponseEntity<?> loginCustomer(@RequestBody @Valid UserLoginDTO dto) {
+    public ResponseEntity<?> loginCustomer(@RequestBody @Valid LoginDTO dto) {
         return ResponseFactory.success("Login successfully",customerService.authenticateUser(dto));
     }
 }

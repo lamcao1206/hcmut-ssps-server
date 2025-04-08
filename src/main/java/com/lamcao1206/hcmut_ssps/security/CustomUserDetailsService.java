@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             Optional<SPSO> spso = spsoRepository.findByEmail(username);
             if (spso.isPresent()) {
                 return new CustomUserDetails(
-                        spso.get().getEmail(),
+                        spso.get(),
                         spso.get().getPassword(),
                         "ROLE_SPSO"
                 );
@@ -41,7 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             Optional<Customer> customer = customerRepository.findByEmail(username);
             if (customer.isPresent()) {
                 return new CustomUserDetails(
-                        customer.get().getEmail(),
+                        customer.get(),
                         customer.get().getPassword(),
                         "ROLE_CUSTOMER"
                 );
