@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Properties;
 
 public final class CloudStorageUtil {
-
     private static final String bucketName;
     private static final Storage STORAGE;
 

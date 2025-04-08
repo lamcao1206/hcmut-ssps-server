@@ -5,7 +5,6 @@ import com.lamcao1206.hcmut_ssps.DTO.CustomerDTO;
 import com.lamcao1206.hcmut_ssps.core.ResponseFactory;
 import com.lamcao1206.hcmut_ssps.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
