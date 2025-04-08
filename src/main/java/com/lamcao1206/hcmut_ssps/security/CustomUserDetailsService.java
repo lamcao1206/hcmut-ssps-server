@@ -47,6 +47,24 @@ public class CustomUserDetailsService implements UserDetailsService {
                 );
             }
         }
+
+        Optional<SPSO> spso = spsoRepository.findByEmail(username);
+        if (spso.isPresent()) {
+            return new CustomUserDetails(
+                    spso.get(),
+                    spso.get().getPassword(),
+                    "ROLE_SPSO"
+            );
+        }
+
+        Optional<Customer> customer = customerRepository.findByEmail(username);
+        if (customer.isPresent()) {
+            return new CustomUserDetails(
+                    customer.get(),
+                    customer.get().getPassword(),
+                    "ROLE_CUSTOMER"
+            );
+        }
         
         throw new UsernameNotFoundException("User not found with email: " + username);
     }

@@ -51,6 +51,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c -> c
+                        .requestMatchers("/v1/api/system/**").hasAnyRole("SPSO", "CUSTOMER")
                         .requestMatchers("/v1/api/spso/**").hasRole("SPSO")
                         .requestMatchers("/v1/api/customer/**").hasRole("CUSTOMER")
                         .requestMatchers("/v1/api/auth/**").permitAll()
