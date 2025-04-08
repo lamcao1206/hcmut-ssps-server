@@ -31,6 +31,4 @@ public class CustomerController {
         return ResponseFactory.success("Fetch customer information success", customerResponseDTO);
     }
     
-    
-    
 }
