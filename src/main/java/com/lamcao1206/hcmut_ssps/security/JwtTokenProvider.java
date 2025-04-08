@@ -43,7 +43,8 @@ public class JwtTokenProvider {
         Instant expiration = now.plus(Long.parseLong(jwtExpirationMs), ChronoUnit.MILLIS);
         
         return Jwts.builder()
-                .subject(userDetails.getId().toString())
+                .subject(userDetails.getUsername())
+                .claim("id", userDetails.getId())
                 .claim("roles", roles)
                 .claim("email", userDetails.getUsername())
                 .issuedAt(Date.from(now))

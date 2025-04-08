@@ -21,7 +21,7 @@ public class Document {
     private String documentType;
     
     @Column(name = "page")
-    private String page;
+    private Integer page;
     
     @Column(name = "url")
     private String url;

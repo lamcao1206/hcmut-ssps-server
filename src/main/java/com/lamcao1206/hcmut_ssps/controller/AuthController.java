@@ -44,4 +44,9 @@ public class AuthController {
     public ResponseEntity<?> loginCustomer(@RequestBody @Valid LoginDTO dto) {
         return ResponseFactory.success("Login successfully",authService.authenticateUser(dto));
     }
+
+    @PostMapping("/login/spso")
+    public ResponseEntity<?> loginSPSO(@RequestBody @Valid LoginDTO dto) {
+        return ResponseFactory.success("Login successfully",authService.authenticateUser(dto));
+    }
 }
