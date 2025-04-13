@@ -10,7 +10,6 @@ import com.lamcao1206.hcmut_ssps.service.PrintOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +42,6 @@ public class CustomerController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) throws IOException {
         Long customerId = userDetails.getId();
-        System.out.println(customerId);
         return ResponseFactory.created("Upload file successfully", printOrderService.createOrder(printOrderDTO, file, customerId));
     }
     
