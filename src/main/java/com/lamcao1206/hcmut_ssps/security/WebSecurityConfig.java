@@ -3,6 +3,7 @@ package com.lamcao1206.hcmut_ssps.security;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -51,6 +52,10 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c -> c
+                        // Allow GET requests to /v1/api/printer for CUSTOMER for fetching printer on FrontEnd
+                        .requestMatchers(HttpMethod.GET, "/v1/api/printer").hasAnyRole("CUSTOMER", "SPSO")
+                        // Restrict other methods of printer endpoints to SPSO only
+                        .requestMatchers("/v1/api/printer/**").hasRole("SPSO")
                         .requestMatchers("/v1/api/system/**").hasAnyRole("SPSO", "CUSTOMER")
                         .requestMatchers("/v1/api/spso/**").hasRole("SPSO")
                         .requestMatchers("/v1/api/customer/**").hasRole("CUSTOMER")
