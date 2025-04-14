@@ -93,11 +93,17 @@ public class PrinterService {
         printer.setDescription(printerDTO.getDescription());
         printer.setRoom(printerDTO.getRoom());
         printer.setStatus(printerDTO.getStatus());
-
-        System.out.println(printer);
+        
         printerRepository.save(printer);
         
-        return modelMapper.map(printer, PrinterDTO.class);
+        return new PrinterDTO(
+                printer.getId(),
+                printer.getName(),
+                printer.getDescription(),
+                printer.getRoom(),
+                printer.getStatus(),
+                null
+        );
         
     }
 }
