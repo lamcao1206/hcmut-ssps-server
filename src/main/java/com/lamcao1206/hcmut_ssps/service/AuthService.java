@@ -8,6 +8,8 @@ import com.lamcao1206.hcmut_ssps.entity.BaseSSPSUser;
 import com.lamcao1206.hcmut_ssps.entity.Customer;
 import com.lamcao1206.hcmut_ssps.entity.SPSO;
 import com.lamcao1206.hcmut_ssps.payload.AuthenticationResponse;
+import com.lamcao1206.hcmut_ssps.repository.CustomerRepository;
+import com.lamcao1206.hcmut_ssps.repository.SPSORepository;
 import com.lamcao1206.hcmut_ssps.security.CustomUserDetails;
 import com.lamcao1206.hcmut_ssps.security.JwtTokenProvider;
 import jakarta.transaction.Transactional;
@@ -18,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 @Transactional
@@ -30,6 +34,12 @@ public class AuthService {
     
     @Autowired
     AuthenticationManager authenticationManager;
+    
+    @Autowired
+    SPSORepository spsoRepository;
+    
+    @Autowired
+    CustomerRepository customerRepository;
     
     public AuthenticationResponse<?> authenticateUser(LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(
@@ -45,13 +55,22 @@ public class AuthService {
         BaseSSPSUser user = userDetails.getUser();
         String token = jwtTokenProvider.generateToken(userDetails);
 
+        if (user instanceof Customer customer) {
+            customer.setLastLogin(new Date());
+            customerRepository.save(customer);
+        } else if (user instanceof SPSO spso) {
+            spso.setLastLogin(new Date());
+            spsoRepository.save(spso);
+        } else {
+            throw new IllegalStateException("Unknown user type");
+        }
+
         BaseSSPSUserDTO userDTO;
         if (user instanceof Customer customer) {
             userDTO = modelMapper.map(customer, CustomerDTO.class);
-        } else if (user instanceof SPSO spso) {
-            userDTO = modelMapper.map(spso, SpsoDTO.class);
         } else {
-            throw new IllegalStateException("Unknown user type");
+            SPSO spso = (SPSO) user;
+            userDTO = modelMapper.map(spso, SpsoDTO.class);
         }
 
         return new AuthenticationResponse<BaseSSPSUserDTO>(token, userDTO);
