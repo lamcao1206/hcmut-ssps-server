@@ -35,7 +35,4 @@ public class Customer implements BaseSSPSUser {
     
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<PrintOrder> printOrders;
-    
-    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    private Set<Payment> payments;
 }

@@ -2,8 +2,10 @@ package com.lamcao1206.hcmut_ssps.controller;
 
 
 import com.lamcao1206.hcmut_ssps.DTO.CustomerDTO;
+import com.lamcao1206.hcmut_ssps.DTO.PaymentDTO;
 import com.lamcao1206.hcmut_ssps.DTO.PrintOrderDTO;
 import com.lamcao1206.hcmut_ssps.core.ResponseFactory;
+import com.lamcao1206.hcmut_ssps.entity.Customer;
 import com.lamcao1206.hcmut_ssps.security.CustomUserDetails;
 import com.lamcao1206.hcmut_ssps.service.CustomerService;
 import com.lamcao1206.hcmut_ssps.service.PrintOrderService;
@@ -43,6 +45,24 @@ public class CustomerController {
     ) throws IOException {
         Long customerId = userDetails.getId();
         return ResponseFactory.created("Upload file successfully", printOrderService.createOrder(printOrderDTO, file, customerId));
+    }
+    
+    @GetMapping("/purchase")
+    ResponseEntity<?> getPurchaseHistory(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) throws IOException {
+        Long customerId = userDetails.getId();
+        Customer customer = (Customer) userDetails.getUser();
+        return ResponseFactory.success("Fetch purchase history successfully!", customerService.findPaymentsByCustomer(customer));
+    }
+    
+    @PostMapping("/purchase")
+    ResponseEntity<?> createNewPurchase(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody PaymentDTO dto
+    ) throws IOException {
+        Customer customer = (Customer) userDetails.getUser();
+        return ResponseFactory.created("Payment created", customerService.createPayment(dto, customer));
     }
     
 }
