@@ -46,15 +46,27 @@ public class SPSOController {
     }
 
     @GetMapping("/printer")
-    ResponseEntity<?> getAllPrinter(
+    ResponseEntity<?> findAllPrinter(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) throws BadRequestException {
-        List<PrinterDTO> printers = printerService.getAllPrinter();
-        ApiResponse<List<PrinterDTO>> response = ApiResponse.of(200, "Success", printers);
-        return ResponseEntity.ok(response);
+        return ResponseFactory.success("", printerService.getAllPrinter());
     }
     
+    @GetMapping("/printer/{id}")
+    ResponseEntity<?> findPrinterById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) throws BadRequestException {
+        return ResponseFactory.success("Find printer successfully!", printerService.findPrinterById(id));
+    }
     
-
+    @PutMapping("/printer/{id}")
+    ResponseEntity<?> updatePrinterById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody PrinterDTO dto
+    ) throws BadRequestException {
+        return ResponseFactory.success("Update printer with id " + id + " successfully", printerService.updatePrinter(dto, id));
+    }
     
 }

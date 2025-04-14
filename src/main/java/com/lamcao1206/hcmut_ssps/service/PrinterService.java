@@ -33,7 +33,14 @@ public class PrinterService {
     
     public List<PrinterDTO> getAllPrinter() throws RuntimeException {
         return printerRepository.findAll().stream()
-                .map(printer->modelMapper.map(printer, PrinterDTO.class))
+                .map(printer -> new PrinterDTO(
+                        printer.getId(),
+                        printer.getName(),
+                        printer.getDescription(),
+                        printer.getRoom(),
+                        printer.getStatus(),
+                        null
+                ))
                 .collect(Collectors.toList());
     }
     
@@ -54,7 +61,7 @@ public class PrinterService {
         return printerRepository.save(printer);
     }
     
-    public PrinterDTO getSpecificPrinterInformation(Long printerId) throws RuntimeException {
+    public PrinterDTO findPrinterById(Long printerId) throws RuntimeException {
         Optional<Printer> printer = printerRepository.findById(printerId);
         
         if (printer.isEmpty()) {
@@ -75,8 +82,8 @@ public class PrinterService {
         );
     }
     
-    public PrinterDTO updatePrinter(PrinterDTO printerDTO) throws RuntimeException {
-        Optional<Printer> printerOptional = printerRepository.findById(printerDTO.getId());
+    public PrinterDTO updatePrinter(PrinterDTO printerDTO, Long id) throws RuntimeException {
+        Optional<Printer> printerOptional = printerRepository.findById(id);
         
         if (printerOptional.isEmpty()) {
             throw new NotFoundException("Printer with id " + printerDTO.getId() + " not found");
@@ -86,8 +93,11 @@ public class PrinterService {
         printer.setDescription(printerDTO.getDescription());
         printer.setRoom(printerDTO.getRoom());
         printer.setStatus(printerDTO.getStatus());
+
+        System.out.println(printer);
+        printerRepository.save(printer);
         
-        return modelMapper.map(printerRepository.save(printer), PrinterDTO.class);
+        return modelMapper.map(printer, PrinterDTO.class);
         
     }
 }

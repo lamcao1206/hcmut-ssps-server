@@ -1,6 +1,5 @@
 package com.lamcao1206.hcmut_ssps.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lamcao1206.hcmut_ssps.entity.enums.PrinterStatus;
 import jakarta.persistence.*;
 import lombok.*;
